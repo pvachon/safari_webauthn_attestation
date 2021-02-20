@@ -3,6 +3,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
 import webauthn.utils
+import webauthn.cert_chain
 import json
 import base64
 
@@ -80,16 +81,15 @@ def check_attestation_apple(decoded, challenge, client_data_raw):
         raise Exception('Missing Cert Chain in attStmt')
     cert_chain_raw = att_stmt.get('x5c', [])
 
+    for cert in cert_chain_raw:
+        print(''.join('{:02x}'.format(x) for x in cert))
+
     # Load the unordered cert chain
     cert_chain = [x509.load_der_x509_certificate(cert, default_backend()) for cert in cert_chain_raw]
 
-    for i in cert_chain:
-        print(i)
+    checked_chain = webauthn.cert_chain.check_cert_chain(cert_chain, kAPPLE_WEBAUTHN_AUTHORITY_ROOT)
 
-    # TODO (big) - check that the EE cert chains up to our pinned root. If you
-    # don't do this, the rest of these checks are useless.
-
-    ee_cert = cert_chain[0]
+    ee_cert = checked_chain[0]
 
     # Extract the magic Apple extension
     ee_exts = ee_cert.extensions
