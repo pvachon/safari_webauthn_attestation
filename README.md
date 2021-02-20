@@ -1,7 +1,7 @@
 # Quick Experiment in WebAuthn on Safari
 This is a quick hacked up set of scripts for experimenting with Webauthn on
-Safari. This is intended to show how to perform chunks of attestation, but
-does not yet check certificate chaining (an exercise for the reader ATM).
+Safari. This is intended to show how to perform chunks of attestation,
+including basic (but incomplete) certificate chain checks.
 
 The test harness is built on top of Flask, uses jQuery, but is otherwise
 very minimal. You can just install the Python requirements in a virtualenv
@@ -29,10 +29,9 @@ be in awe of its flaws as well.
  * Generating the nonce and extracting it from the end entity cert
  * Ensuring the end-entity cert public key matches auth data
  * Checking the cert chain is rooted in the pinned AAA root
+    * Includes a BasicConstraints check; does not check KeyUsage
 
 ## What is Not Done
  * Certificate revocation checks (but I have no idea where the CRLs are)
- * Certificate policy checks (so someone could commit evil with the EE)
-   * If you do use this code, at least enforce the path length checks
  * Certificate expiration checks (effort)
 
