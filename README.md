@@ -28,7 +28,11 @@ be in awe of its flaws as well.
  * Extracting various fields from the user data and attestation data
  * Generating the nonce and extracting it from the end entity cert
  * Ensuring the end-entity cert public key matches auth data
-
-## What needs to be done
  * Checking the cert chain is rooted in the pinned AAA root
+
+## What is Not Done
+ * Certificate revocation checks (but I have no idea where the CRLs are)
+ * Certificate policy checks (so someone could commit evil with the EE)
+   * If you do use this code, at least enforce the path length checks
+ * Certificate expiration checks (effort)
 
